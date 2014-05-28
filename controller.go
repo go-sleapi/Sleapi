@@ -1,4 +1,4 @@
-package sleep
+package sleapi
 
 type Controller interface {
 	Name() string

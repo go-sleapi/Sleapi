@@ -1,4 +1,4 @@
-package sleep
+package sleapi
 
 import (
 	"fmt"
