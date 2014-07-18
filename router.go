@@ -3,7 +3,7 @@ package sleapi
 import (
 	"errors"
 	"fmt"
-	"io"
+	//"io"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -524,8 +524,9 @@ func (this *Router) FindRoute(w http.ResponseWriter, req *http.Request) {
 
 	if !ok {
 		fmt.Println("Route Not Found: 404")
-		w.WriteHeader(http.StatusNotFound)
-		io.WriteString(w, "404 - Page Not Found!\n")
+		//w.WriteHeader(http.StatusNotFound)
+		//io.WriteString(w, "404 - Page Not Found!\n")
+		http.NotFound(w, req)
 	}
 	//return nil
 }
