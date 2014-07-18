@@ -1,3 +1,5 @@
+package sleapi
+
 import (
 	"bufio"
 	"fmt"
