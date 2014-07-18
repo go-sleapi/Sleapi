@@ -1,3 +1,10 @@
+/*
+
+Credit for this file goes to the Martini Go Web Framework
+project on GitHub:  www.github.com/go-martini/martini
+
+*/
+
 package sleapi
 
 import (
