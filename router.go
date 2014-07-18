@@ -360,9 +360,9 @@ func callControllerMethod(route *Route, rc *RouteContext) {
 				in = append(in, reflect.ValueOf(p))
 			}
 		}
-		log.Println("Before calling: %s.%s", route.Controller.Name(), rc.MethodName)
+		log.Printf("Before calling: %s.%s\n", route.Controller.Name(), rc.MethodName)
 		me.Call(in)
-		log.Println("After Calling: %s.%s", route.Controller.Name(), rc.MethodName)
+		log.Printf("After Calling: %s.%s\n", route.Controller.Name(), rc.MethodName)
 	}
 }
 
