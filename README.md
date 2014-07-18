@@ -1,7 +1,7 @@
 Sleapi
 ======
 
-Lightweight Go Web Framework for building REST based ASP.NET MVC applications.
+Lightweight Go Web Framework for building REST applications.  Modeled after ASP.NET Web API (mostly for how routes are defined).
 
 Example:
 
