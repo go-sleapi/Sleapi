@@ -496,7 +496,7 @@ func (this *Router) FindRoute(w ResponseWriter, req *http.Request) {
 
 	ok := false
 	rc := NewRouteContext(w, req)
-	for name, route := range this.Routes.Table {
+	for _, route := range this.Routes.Table {
 		//fmt.Println("Route Name: ", name)
 		//pattern := route.RootPattern
 
