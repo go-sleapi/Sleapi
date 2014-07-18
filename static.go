@@ -9,17 +9,17 @@ import (
 )
 
 func Static(directory string) func(w ResponseWriter, req *http.Request) {
-	fmt.Println("Setup Static")
+	//fmt.Println("Setup Static")
 
-	staticDir := http.Dir(directory)
+	//staticDir := http.Dir(directory)
 	//prefix := directory
 
 	return func(w ResponseWriter, req *http.Request) {
-		fmt.Println("Serving Static files")
-		fmt.Println("Serving Path: ", req.URL.Path)
-		fmt.Println("StaticDir: ", staticDir)
+		//fmt.Println("Serving Static files")
+		//fmt.Println("Serving Path: ", req.URL.Path)
+		//fmt.Println("StaticDir: ", staticDir)
 		pwd, _ := os.Getwd()
-		fmt.Println("Current Directory: ", pwd)
+		//fmt.Println("Current Directory: ", pwd)
 
 		reqPath := req.URL.Path
 
@@ -30,7 +30,7 @@ func Static(directory string) func(w ResponseWriter, req *http.Request) {
 		//trimmedPath := strings.TrimPrefix(path, prefix)
 		trimmedPath := path.Join(pwd, reqPath)
 
-		fmt.Println("File to open: ", trimmedPath)
+		//fmt.Println("File to open: ", trimmedPath)
 		//httpFile, error := staticDir.Open(trimmedPath)
 		httpFile, error := os.Open(trimmedPath)
 		if error != nil {
@@ -38,7 +38,7 @@ func Static(directory string) func(w ResponseWriter, req *http.Request) {
 		}
 
 		if httpFile != nil {
-			fmt.Println("HttpFile: ", httpFile)
+			//fmt.Println("HttpFile: ", httpFile)
 
 			stat, err := httpFile.Stat()
 			if err != nil {
