@@ -482,7 +482,7 @@ func matchRoute(route *Route, segments []string) *RouteData {
 	return routeData
 }
 
-func (this *Router) FindRoute(w http.ResponseWriter, req *http.Request) {
+func (this *Router) FindRoute(w ResponseWriter, req *http.Request) {
 	fmt.Println("Find Route: ", this.Routes.Table)
 
 	cleanPath := strings.TrimPrefix(req.URL.Path, "/")

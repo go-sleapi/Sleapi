@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-type Napper func(w http.ResponseWriter, req *http.Request)
+type Napper func(w ResponseWriter, req *http.Request)
 
 type Sleep struct {
 	Port   string
@@ -32,7 +32,11 @@ func (this *Sleep) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("Server: ", req.URL.Path)
 
 	for _, h := range this.Naps {
-		h(w, req)
+		rw = NewResponseWriter(w)
+		h(rw, req)
+		if rw.Written() {
+			break
+		}
 	}
 
 	//this.Router.FindRoute(w, req)
@@ -44,8 +48,8 @@ func (this *Sleep) Run() {
 		port = "3030"
 	}
 
-	err:= http.ListenAndServe(":"+port, this)
-	if err != nil{
+	err := http.ListenAndServe(":"+port, this)
+	if err != nil {
 		fmt.Println("ListenAndServer Error: ", err.Error())
 	}
 }

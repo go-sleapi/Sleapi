@@ -8,13 +8,13 @@ import (
 	//"strings"
 )
 
-func Static(directory string) func(w http.ResponseWriter, req *http.Request) {
+func Static(directory string) func(w ResponseWriter, req *http.Request) {
 	fmt.Println("Setup Static")
 
 	staticDir := http.Dir(directory)
 	//prefix := directory
 
-	return func(w http.ResponseWriter, req *http.Request) {
+	return func(w ResponseWriter, req *http.Request) {
 		fmt.Println("Serving Static files")
 		fmt.Println("Serving Path: ", req.URL.Path)
 		fmt.Println("StaticDir: ", staticDir)
