@@ -32,7 +32,7 @@ func (this *Sleep) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("Server: ", req.URL.Path)
 
 	for _, h := range this.Naps {
-		rw = NewResponseWriter(w)
+		rw := NewResponseWriter(w)
 		h(rw, req)
 		if rw.Written() {
 			break
