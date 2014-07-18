@@ -360,9 +360,9 @@ func callControllerMethod(route *Route, rc *RouteContext) {
 				in = append(in, reflect.ValueOf(p))
 			}
 		}
-		log.Info("Before calling: ", rc.MethodName)
+		log.Println("Before calling: ", rc.MethodName)
 		me.Call(in)
-		log.Info("After Calling: ", rc.MethodName)
+		log.Println("After Calling: ", rc.MethodName)
 	}
 }
 
@@ -491,6 +491,7 @@ func (this *Router) FindRoute(w ResponseWriter, req *http.Request) {
 	//fmt.Println("Find Route: ", this.Routes.Table)
 
 	cleanPath := strings.TrimPrefix(req.URL.Path, "/")
+	segments := splitIntoPathStrings(cleanPath)
 	//fmt.Println("Request Parts: ", segments)
 
 	ok := false
