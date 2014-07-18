@@ -44,5 +44,8 @@ func (this *Sleep) Run() {
 		port = "3030"
 	}
 
-	http.ListenAndServe(":"+port, this)
+	err:= http.ListenAndServe(":"+port, this)
+	if err != nil{
+		fmt.Println("ListenAndServer Error: ", err.Error())
+	}
 }
