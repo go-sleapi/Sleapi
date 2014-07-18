@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	//"io"
+	"log"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -114,7 +115,7 @@ func NewSeparatorSegment() *SeparatorSegment {
 }
 
 func NewPathParameterSegment(contents string) *PathParameterSegment {
-	fmt.Println("Creating Path Parameter Segment...", contents)
+	//fmt.Println("Creating Path Parameter Segment...", contents)
 	pps := &PathParameterSegment{}
 	pps.SegmentContents = contents
 	pps.segmentType = PathParameterSegmentType
@@ -122,7 +123,7 @@ func NewPathParameterSegment(contents string) *PathParameterSegment {
 }
 
 func NewContentSegment(contents string) *ContentSegment {
-	fmt.Println("Creating Content Segment...", contents)
+	//fmt.Println("Creating Content Segment...", contents)
 	cs := &ContentSegment{}
 	cs.SegmentContents = contents
 	cs.segmentType = ContentsSegmentType
@@ -165,9 +166,10 @@ func (this PathParameterSegment) GetSegmentType() SegmentType {
 
 func parseParameter(pattern string) (string, string) {
 	lb := strings.Index(pattern, string(LeftBrace))
-	if lb != -1 {
+	/*if lb != -1 {
 		fmt.Println("Found { at: ", lb)
 	}
+	*/
 
 	var token string
 	var root string
@@ -184,7 +186,7 @@ func parseParameter(pattern string) (string, string) {
 	}
 	parts := strings.Split(sandbox, "/")
 
-	fmt.Println("Parts(parseParameter): ", parts)
+	//fmt.Println("Parts(parseParameter): ", parts)
 
 	for _, part := range parts {
 		if !strings.Contains(part, "{") && !strings.Contains(part, "}") {
@@ -197,10 +199,10 @@ func parseParameter(pattern string) (string, string) {
 
 func parseRoute(requestPath string) []PathSegmenter {
 	parts := splitIntoPathStrings(requestPath)
-	fmt.Println("Parts: ", parts)
+	//fmt.Println("Parts: ", parts)
 
 	segments := splitIntoPathSegments(parts)
-	fmt.Println("Segments: ", segments)
+	//fmt.Println("Segments: ", segments)
 
 	return segments
 }
@@ -260,9 +262,9 @@ func splitIntoPathSegments(parts []string) []PathSegmenter {
 			segments = append(segments, sp)
 		} else {
 			segment := parseSegment(part)
-			fmt.Println("Segment Type: ", segment.GetSegmentType())
+			//fmt.Println("Segment Type: ", segment.GetSegmentType())
 			segments = append(segments, segment)
-			fmt.Println("Segments (split): ", segments)
+			//fmt.Println("Segments (split): ", segments)
 		}
 	}
 
@@ -341,23 +343,26 @@ func getLiteral(segment string) string {
 
 func callControllerMethod(route *Route, rc *RouteContext) {
 	typ := reflect.ValueOf(route.Controller)
-	fmt.Println("Type: ", typ)
+	//fmt.Println("Type: ", typ)
 
-	if len(rc.MethodName) > 0 {
+	/*if len(rc.MethodName) > 0 {
 		fmt.Println("CallMethod: ", rc.MethodName)
 	}
+	*/
 
 	me := typ.MethodByName(rc.MethodName)
 	if me.IsValid() {
-		fmt.Println("IsValid...")
+		//fmt.Println("IsValid...")
 		in := []reflect.Value{reflect.ValueOf(rc.Resp), reflect.ValueOf(rc.Req)}
 		if len(rc.Data.PositionParameters) > 0 {
 			for _, p := range rc.Data.PositionParameters {
-				fmt.Println("Appending Val: ", p)
+				//fmt.Println("Appending Val: ", p)
 				in = append(in, reflect.ValueOf(p))
 			}
 		}
+		log.Info("Before calling: ", rc.MethodName)
 		me.Call(in)
+		log.Info("After Calling: ", rc.MethodName)
 	}
 }
 
@@ -367,7 +372,7 @@ func isIndexRoute(route *Route, rc *RouteContext) bool {
 	cleanPath := strings.TrimSuffix(rc.Req.URL.Path, "/")
 	if cleanPath == pattern && rc.Req.Method == "GET" {
 		rc.MethodName = IndexMethod
-		fmt.Println("Found Index Route")
+		//fmt.Println("Found Index Route")
 		return true
 	}
 
@@ -376,20 +381,20 @@ func isIndexRoute(route *Route, rc *RouteContext) bool {
 
 func findControllerMethod(route *Route, rc *RouteContext) (bool, string, error) {
 	typ := reflect.TypeOf(route.Controller)
-	fmt.Println("Type: ", typ)
+	//fmt.Println("Type: ", typ)
 	numMethods := typ.NumMethod()
 	foundMethod := ""
 	for i := 0; i < numMethods; i++ {
 		method := typ.Method(i)
-		fmt.Println("Method Name: ", method.Name)
+		//fmt.Println("Method Name: ", method.Name)
 		methodName := strings.ToLower(method.Name)
 		httpMethod := strings.ToLower(rc.Req.Method)
 		numParameters := method.Type.NumIn()
-		fmt.Println("In: ", numParameters)
+		//fmt.Println("In: ", numParameters)
 
 		//paramPos := 0
 		if numParameters == (len(rc.Data.RouteValues)+StandardParameters) && strings.Contains(methodName, httpMethod) {
-			fmt.Println("Method: ", methodName)
+			//fmt.Println("Method: ", methodName)
 			if len(foundMethod) > 0 {
 				return false, "", errors.New("Found Multiple Matching Methods")
 			}
@@ -428,9 +433,9 @@ func isMatch(route *Route, rc *RouteContext) bool {
 	lastSlashIndex := strings.LastIndex(path, "/")
 	if lastSlashIndex != -1 {
 		param := path[lastSlashIndex+1:]
-		fmt.Println("Parameter: ", param)
+		//fmt.Println("Parameter: ", param)
 		typ := reflect.TypeOf(route.Controller)
-		fmt.Println("Type: ", typ)
+		//fmt.Println("Type: ", typ)
 		numMethods := typ.NumMethod()
 		for i := 0; i < numMethods; i++ {
 			method := typ.Method(i)
@@ -451,7 +456,7 @@ func isMatch(route *Route, rc *RouteContext) bool {
 func matchRoute(route *Route, segments []string) *RouteData {
 	pathSegments := route.PathSegments
 
-	fmt.Println("matchRoute.Segments: ", segments)
+	//fmt.Println("matchRoute.Segments: ", segments)
 
 	if len(route.PathSegments) != len(segments) {
 		return nil
@@ -459,17 +464,17 @@ func matchRoute(route *Route, segments []string) *RouteData {
 
 	routeData := NewRouteData()
 	for index, segment := range pathSegments {
-		fmt.Println("Parameter Check...", segment.GetSegmentType())
-		fmt.Println("Parameter Type: ", PathParameterSegmentType)
+		//fmt.Println("Parameter Check...", segment.GetSegmentType())
+		//fmt.Println("Parameter Type: ", PathParameterSegmentType)
 		if segment.GetSegmentType() != PathParameterSegmentType {
-			fmt.Println("segment.Content(): ", segment.Content())
-			fmt.Println("segments[index]: ", segments[index])
+			//fmt.Println("segment.Content(): ", segment.Content())
+			//fmt.Println("segments[index]: ", segments[index])
 			if segment.Content() != segments[index] {
 				return nil
 			}
 		} else {
-			fmt.Println("{Parameter} = ", segment.Content())
-			fmt.Println("Parameter Value = ", segments[index])
+			//fmt.Println("{Parameter} = ", segment.Content())
+			//fmt.Println("Parameter Value = ", segments[index])
 			/*if segment.Content() != segments[index] {
 				return nil
 			}
@@ -483,16 +488,15 @@ func matchRoute(route *Route, segments []string) *RouteData {
 }
 
 func (this *Router) FindRoute(w ResponseWriter, req *http.Request) {
-	fmt.Println("Find Route: ", this.Routes.Table)
+	//fmt.Println("Find Route: ", this.Routes.Table)
 
 	cleanPath := strings.TrimPrefix(req.URL.Path, "/")
-	segments := splitIntoPathStrings(cleanPath)
-	fmt.Println("Request Parts: ", segments)
+	//fmt.Println("Request Parts: ", segments)
 
 	ok := false
 	rc := NewRouteContext(w, req)
 	for name, route := range this.Routes.Table {
-		fmt.Println("Route Name: ", name)
+		//fmt.Println("Route Name: ", name)
 		//pattern := route.RootPattern
 
 		/*fmt.Println("Root Pattern: ", pattern)
@@ -507,13 +511,13 @@ func (this *Router) FindRoute(w ResponseWriter, req *http.Request) {
 
 		routeData := matchRoute(route, segments)
 		if routeData != nil {
-			fmt.Println("Found Match With Segments...", routeData.RouteValues)
+			//fmt.Println("Found Match With Segments...", routeData.RouteValues)
 			rc.Data = routeData
 			found, methodName, err := findControllerMethod(route, rc)
 			if err != nil {
 				fmt.Println("Error: ", err.Error())
 			} else if found {
-				fmt.Println("Found Method: ", methodName)
+				//fmt.Println("Found Method: ", methodName)
 				rc.MethodName = methodName
 				callControllerMethod(route, rc)
 				ok = routeData != nil
