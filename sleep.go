@@ -30,7 +30,7 @@ func Sleeper() *Sleep {
 func (this *Sleep) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	//io.WriteString(w, "hello, world!\n")
 	fmt.Println("Server: ", req.URL.Path)
-	fmt.Println("Server (raw): ", req.URL.RawQuery)
+	fmt.Println("Server (raw): ", req.URL.Opaque)
 
 	for _, h := range this.Naps {
 		rw := NewResponseWriter(w)
