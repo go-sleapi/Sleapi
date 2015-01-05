@@ -386,9 +386,10 @@ func findControllerMethod(route *Route, rc *RouteContext) (bool, string, error) 
 	foundMethod := ""
 	for i := 0; i < numMethods; i++ {
 		method := typ.Method(i)
-		//fmt.Println("Method Name: ", method.Name)
+		fmt.Println("Method Name: ", method.Name)
 		methodName := strings.ToLower(method.Name)
 		httpMethod := strings.ToLower(rc.Req.Method)
+		fmt.Println("Request Method: " + rc.Req.Method)
 		numParameters := method.Type.NumIn()
 		//fmt.Println("In: ", numParameters)
 
@@ -442,7 +443,6 @@ func isMatch(route *Route, rc *RouteContext) bool {
 			//fmt.Println("Method Name: ", method.Name)
 			methodName := strings.ToLower(method.Name)
 			httpMethod := strings.ToLower(rc.Req.Method)
-			fmt.Println("Request Method: " + rc.Req.Method)
 			if strings.Contains(methodName, httpMethod) {
 				rc.MethodName = method.Name
 				rc.Param = param
