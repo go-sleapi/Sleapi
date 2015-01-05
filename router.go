@@ -442,6 +442,7 @@ func isMatch(route *Route, rc *RouteContext) bool {
 			//fmt.Println("Method Name: ", method.Name)
 			methodName := strings.ToLower(method.Name)
 			httpMethod := strings.ToLower(rc.Req.Method)
+			fmt.Println("Request Method: " + rc.Req.Method)
 			if strings.Contains(methodName, httpMethod) {
 				rc.MethodName = method.Name
 				rc.Param = param
